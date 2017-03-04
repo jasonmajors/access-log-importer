@@ -30,9 +30,9 @@ class GeodataRepository
 
         $geodata   = compact('latitude', 'longitude', 'country', 'state', 'city', 'zipcode');
 
-        foreach ($geodata as $attribute) {
-            if ($attribute == false) {
-                Log::info("Lookup failed for $ipAddress");
+        foreach ($geodata as $attribute => $v) {
+            if ($v == false) {
+                Log::info("Lookup failed for $ipAddress: No $attribute found");
                 $geodata = false;
             }
         }
