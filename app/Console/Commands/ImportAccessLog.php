@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Services\AccessLogParser;
 use Storage;
+use Carbon\Carbon;
 
 class ImportAccessLog extends Command
 {
@@ -13,7 +14,10 @@ class ImportAccessLog extends Command
      *
      * @var string
      */
-    protected $signature = 'import:access-log';
+    protected $signature = 'import:access-log
+        {--start=}
+        {--end=}
+        ';
 
     /**
      * The console command description.
@@ -47,6 +51,19 @@ class ImportAccessLog extends Command
      */
     public function handle()
     {
+        $start = null;
+        $end   = null;
+        // Check for start and end params
+        if ($this->option('start')) {
+            $start = Carbon::createFromFormat('m/d/Y', $this->option('start'));
+        }
+        if ($this->option('end')) {
+            $end = Carbon::createFromFormat('m/d/Y', $this->option('end'));
+        }
+        // If a boundary is null, set it to the extreme
+        $start = is_null($start) ? Carbon::createFromTimestamp(-1) : $start;
+        $end   = is_null($end)   ? Carbon::createFromTimestamp(9999999999) : $end; // year 2286, this hopefully won't be in production
+        // Get the file
         $logFile   = 'gobankingrates.com.access.log';
         $accessLog = Storage::disk('s3')->get($logFile);
         $this->comment("File: $logFile found. Parsing and importing...");
@@ -56,7 +73,8 @@ class ImportAccessLog extends Command
         array_pop($accessLog); 
         // Display a progress bar when run from Artisan CLI
         $progressBar = $this->output->createProgressBar(count($accessLog));
-        $this->accessLogParser->parse($accessLog, $progressBar);
+        // Parse the file
+        $this->accessLogParser->parse($accessLog, $progressBar, $start, $end);
         $this->info("\r\n $logFile has been successfully imported!");
     }
 }

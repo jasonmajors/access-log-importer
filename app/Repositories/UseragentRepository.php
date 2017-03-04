@@ -45,43 +45,43 @@ class UseragentRepository
      */
     private function normalizeDevice($uaDevice, \UAParser\Result\Client $useragentInfo)
     {
+        $device = $uaDevice;
         // First convert UAParser's device titles over to what we want
-        switch ($uaDevice) {
-            case 'spider':
-                $device = 'robot';
-                break;
-            case 'ipad':
-                $device = 'tablet';
-                break;
-            case 'iphone':
-                $device = 'mobile'; 
-                break;
-            case 'kindle':
-                $device = 'tablet';
-            default:
-                // Leave device as what the parser gave us for futher investigation
-                $device = $uaDevice;
-                break;
+        if (strpos($uaDevice, 'spider') !== false) {
+            $device = 'robot';
         }
-        // Check for Samsung and LG phones
-        // Will return 0 if string begins with 'samsung'. Important to use '!== false'
+
+        if (strpos($uaDevice, 'phone') !== false) {
+            $device = 'mobile';
+        }
+
+        if (strpos($uaDevice, 'nexus') !== false) {
+            $device = 'tablet';
+        }
         if (strpos($uaDevice, 'samsung') !== false) {
             $device = 'mobile';
-        } elseif (strpos($uaDevice, 'lg') !== false) {
+        }
+
+        if (strpos($uaDevice, 'lg') !== false) {
             $device = 'mobile';
         }
-        // Check the UA string for "Mobi" as recommended by MDN
-        if (strpos($useragentInfo->originalUserAgent, 'Mobi') !== false) {
-            $device = 'mobile';
+
+        if (strpos($uaDevice, 'ipad') !== false) {
+            $device = 'tablet';
         }
-        if (strpos($useragentInfo->originalUserAgent, 'Tablet') !== false) {
+
+        if (strpos($uaDevice, 'kindle') !== false) {
             $device = 'tablet';
         }
         // Default "Other"s from parser to desktop
         if ($uaDevice == 'other') {
             $device = 'desktop';
         }
-    
+        // Lastly, check the original UA string for "Mobi" as recommended by MDN
+        if (strpos($useragentInfo->originalUserAgent, 'Mobi') !== false) {
+            $device = 'mobile';
+        }
+
         return $device;
     }
 }
