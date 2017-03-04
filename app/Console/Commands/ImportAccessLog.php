@@ -55,10 +55,10 @@ class ImportAccessLog extends Command
         $end   = null;
         // Check for start and end params
         if ($this->option('start')) {
-            $start = Carbon::createFromFormat('m/d/Y', $this->option('start'));
+            $start = Carbon::createFromFormat('m/d/Y h:i A', $this->option('start'));
         }
         if ($this->option('end')) {
-            $end = Carbon::createFromFormat('m/d/Y', $this->option('end'));
+            $end = Carbon::createFromFormat('m/d/Y h:i A', $this->option('end'));
         }
         // If a boundary is null, set it to the extreme
         $start = is_null($start) ? Carbon::createFromTimestamp(-1) : $start;

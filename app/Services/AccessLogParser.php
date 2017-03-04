@@ -39,12 +39,13 @@ class AccessLogParser
     {
         $this->logParser->setFormat('%h %l %u %t "%r" %>s %O "%{Referer}i" \"%{User-Agent}i"');
         foreach ($accessLog as $visit) {
+            // Advance the bar
+            $progressBar->advance();
             // stdObject
             $entry = $this->logParser->parse($visit);
             $timestamp = Carbon::createFromTimestamp($entry->stamp);
             // Check if we care about this entry based on filtering params
             $outOfBounds = $this->outOfBounds($timestamp, $start, $end);
-            Log::info($timestamp->toDateTimeString());
             if ($outOfBounds) {
                 continue;
             }
@@ -54,8 +55,6 @@ class AccessLogParser
             $userAgent = $this->useragentRepository->make($userAgentString, $timestamp);
             // assign geodata data to the useragent
             $this->geodataRepostitory->assignTo($userAgent, $entry->host);
-            // Advance the bar
-            $progressBar->advance();
         }
         $progressBar->finish();
     }
