@@ -33,7 +33,6 @@ class GeodataRepository
         foreach ($geodata as $attribute => $v) {
             if ($v == false) {
                 Log::info("Lookup failed for $ipAddress: No $attribute found");
-                $geodata = false;
             }
         }
 

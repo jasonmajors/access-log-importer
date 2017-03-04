@@ -15,11 +15,11 @@ class CreateGeodataTable extends Migration
     {
         Schema::create('geodata', function (Blueprint $table) {
             $table->increments('id');
-            $table->float('longitude', 10, 4);
-            $table->float('latitude', 10, 4);
-            $table->string('country');
-            $table->string('state');
-            $table->string('city');
+            $table->float('longitude', 10, 4)->nullable();
+            $table->float('latitude', 10, 4)->nullable();
+            $table->string('country')->nullable();
+            $table->string('state')->nullable();
+            $table->string('city')->nullable();
             $table->string('zipcode')->nullable();
             $table->integer('useragent_id')->unsigned();
             $table->timestamps();
