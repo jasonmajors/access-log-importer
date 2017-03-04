@@ -20,7 +20,7 @@ class CreateGeodataTable extends Migration
             $table->string('country');
             $table->string('state');
             $table->string('city');
-            $table->string('zipcode');
+            $table->string('zipcode')->nullable();
             $table->integer('useragent_id')->unsigned();
             $table->timestamps();
         });

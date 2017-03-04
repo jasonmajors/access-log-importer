@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Useragent extends Model
 {
-	/**
-	 * Allow mass assignment on everything
-	 * @var array
-	 */
+    /**
+     * Allow mass assignment on everything
+     * @var array
+     */
     protected $guarded = [];
 
     /**
@@ -18,6 +18,6 @@ class Useragent extends Model
      */
     public function geodata()
     {
-    	return $this->hasOne('App\Geodata');
+        return $this->hasOne('App\Geodata');
     }
 }

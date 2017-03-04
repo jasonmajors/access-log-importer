@@ -4,55 +4,54 @@ namespace App\Repositories;
 
 use App\Geodata;
 use App\Useragent;
-use GuzzleHttp\Client;
-use GuzzleHttp\Psr7\Response;
 use Illuminate\Support\Facades\Log;
+use MaxMind\Db\Reader;
 
 class GeodataRepository
 {
-	/**
-	 * Endpoint to get the geodata for a given IP address
-	 */
-	const ENDPOINT = 'http://freegeoip.net/json/';
+    /**
+     * Fetches the geodata for a given IP address from the .mmdb file
+     * @param string $ipAddress
+     * @return array $geodata
+     */
+    protected function getGeodata($ipAddress)
+    {
+        $missingData = false;
+        $geodataDb   = database_path('geodata/GeoLite2-City.mmdb');
 
-	/**
-	 * Fetches the geodata for a given IP address
-	 * @param string $ipAddress
-	 * @return array $geodata
-	 */
-	protected function getGeodata($ipAddress)
-	{
-		$client   = new Client();
-		$response = $client->request('GET', self::ENDPOINT . $ipAddress);
-		if ($response->getStatusCode() == 200) {
-			$geodata = json_decode($response->getBody(), true);
-		} else {
-			Log::error("Unable to fetch geodata for $ipAddress");
-		}
+        $result    = (new Reader($geodataDb))->get($ipAddress);
+        // Assign geodata attributes if they're available, assign to false if not
+        $latitude  = isset($result['location']['latitude']) ? $result['location']['latitude'] : false;
+        $longitude = isset($result['location']['longitude']) ? $result['location']['longitude'] : false;
+        $country   = isset($result['registered_country']['iso_code']) ? $result['registered_country']['iso_code'] : false;
+        $state     = isset($result['subdivisions'][0]['names']['en']) ? $result['subdivisions'][0]['names']['en'] : false;
+        $city      = isset($result['city']['names']['en']) ? $result['city']['names']['en'] : false;
+        $zipcode   = isset($result['postal']['code']) ? $result['postal']['code'] : false;
 
-		return $geodata;
-	}
+        $geodata   = compact('latitude', 'longitude', 'country', 'state', 'city', 'zipcode');
 
-	/**
-	 * Create and assign the geodata for a useragent
-	 * @param  Useragent $useragent An instance of a Useragent model
-	 * @param  string    $ipAddress 
-	 * @return void
-	 */
-	public function assign(Useragent $useragent, $ipAddress)
-	{
-		$geodata = $this->getGeodata($ipAddress);
-		if ($geodata) {
-			$latitude  = $geodata['latitude'];
-			$longitude = $geodata['longitude'];
-			$country   = $geodata['country_name'];
-			$state     = $geodata['region_name'];
-			$city      = $geodata['city'];
-			$zipcode   = $geodata['zip_code'];
+        foreach ($geodata as $attribute) {
+            if ($attribute == false) {
+                Log::info("Lookup failed for $ipAddress");
+                $geodata = false;
+            }
+        }
 
-			$attributes = compact('latitude', 'longitude', 'country', 'state', 'city', 'zipcode');
-			// Create the geodata on the useragent model
-			$useragent->geodata()->create($attributes);
-		}
-	}
+        return $geodata;
+    }
+
+    /**
+     * Create and assign the geodata for a useragent
+     * @param  Useragent $useragent An instance of a Useragent model
+     * @param  string    $ipAddress 
+     * @return void
+     */
+    public function assignTo(Useragent $useragent, $ipAddress)
+    {
+        $geodata = $this->getGeodata($ipAddress);
+        if ($geodata) {
+            // Create the geodata on the useragent model
+            $useragent->geodata()->create($geodata);
+        }
+    }
 }

@@ -8,14 +8,14 @@ class Geodata extends Model
 {
     protected $table = 'geodata';
 
-	/**
-	 * Allow mass assignment on everything
-	 * @var array
-	 */
+    /**
+     * Allow mass assignment on everything
+     * @var array
+     */
     protected $guarded = [];
 
     public function useragent()
     {
-    	return $this->belongsTo('App\Useragent');
+        return $this->belongsTo('App\Useragent');
     }
 }
