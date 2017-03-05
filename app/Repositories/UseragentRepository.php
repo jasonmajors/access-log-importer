@@ -14,7 +14,7 @@ class UseragentRepository
      * @param  Carbon $timestamp
      * @return App\Useragent            
      */
-    public function make($useragent, Carbon $timestamp)
+    public function makeUseragent($useragent, Carbon $timestamp)
     {
         $useragentParser  = UseragentParser::create();
         // Parse the information out of the useragent string

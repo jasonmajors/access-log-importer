@@ -52,9 +52,12 @@ class AccessLogParser
 
             $userAgentString = $entry->HeaderUserAgent;
             // make App\Useragent
-            $userAgent = $this->useragentRepository->make($userAgentString, $timestamp);
-            // assign geodata data to the useragent
-            $this->geodataRepostitory->assignTo($userAgent, $entry->host);
+            $useragent = $this->useragentRepository->makeUseragent($userAgentString, $timestamp);
+            $geodata   = $this->geodataRepostitory->makeGeodata($useragent, $entry->host);
+            // GeodataRepository::makeGeodata() will try to make a geodata entry with missing data, but if there's NO data...
+            if (is_null($geodata)) {
+                Log::error("Unable to create GeoIP data for $entry->host. No geodata data found");
+            }
         }
         $progressBar->finish();
     }

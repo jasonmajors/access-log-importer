@@ -32,7 +32,7 @@ class GeodataRepository
 
         foreach ($geodata as $attribute => $v) {
             if ($v == false) {
-                Log::info("Lookup failed for $ipAddress: No $attribute found");
+                Log::info("No $attribute found for $ipAddress");
             }
         }
 
@@ -43,14 +43,16 @@ class GeodataRepository
      * Create and assign the geodata for a useragent
      * @param  Useragent $useragent An instance of a Useragent model
      * @param  string    $ipAddress 
-     * @return void
+     * @return App\Geodata
      */
-    public function assignTo(Useragent $useragent, $ipAddress)
+    public function makeGeodata(Useragent $useragent, $ipAddress)
     {
-        $geodata = $this->getGeodata($ipAddress);
-        if ($geodata) {
+        $geodataArray = $this->getGeodata($ipAddress);
+        if ($geodataArray) {
             // Create the geodata on the useragent model
-            $useragent->geodata()->create($geodata);
+            $geodata = $useragent->geodata()->create($geodataArray);
         }
+
+        return $geodata;
     }
 }
