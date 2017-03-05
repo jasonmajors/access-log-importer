@@ -46,7 +46,7 @@ class ImportAccessLog extends Command
 
     /**
      * Execute the console command.
-     *
+     * @todo  Catch exceptions from Carbon to make date formats less strict
      * @return mixed
      */
     public function handle()
@@ -64,9 +64,9 @@ class ImportAccessLog extends Command
         $start = is_null($start) ? Carbon::createFromTimestamp(-1) : $start;
         $end   = is_null($end)   ? Carbon::createFromTimestamp(9999999999) : $end; // year 2286, this hopefully won't be in production
         // Get the file
-        $logFile   = 'gobankingrates.com.access.log';
+        $logFile   = env('ACCESS_LOG');
         $accessLog = Storage::disk('s3')->get($logFile);
-        $this->comment("File: $logFile found. Parsing and importing...");
+        $this->comment("Access Log: $logFile found. Parsing and importing...");
         // Convert into an array we can iterate over
         $accessLog = explode(PHP_EOL, $accessLog);
         // The explode() will leave an empty item at the end of the array since it's on \r\n
