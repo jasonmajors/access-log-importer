@@ -18,6 +18,7 @@ class CreateUseragentsTable extends Migration
             $table->string('browser');
             $table->string('device');
             $table->string('operating_system');
+            $table->dateTime('time_of_visit');
             $table->timestamps();
         });
     }

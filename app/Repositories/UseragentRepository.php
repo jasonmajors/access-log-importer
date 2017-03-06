@@ -27,9 +27,9 @@ class UseragentRepository
         // Set the device to one of the 4 allowed devices
         $device           = $this->normalizeDevice($uaDevice, $useragentInfo);
         // Not required in the specifications, but probably a good idea to track
-        $timeOfVisit      = $timestamp->toDateTimeString();
+        $time_of_visit    = $timestamp->toDateTimeString();
 
-        $attributes = compact('browser', 'device', 'operating_system');
+        $attributes = compact('browser', 'device', 'operating_system', 'time_of_visit');
         $useragent  = Useragent::create($attributes);
 
         return $useragent;
