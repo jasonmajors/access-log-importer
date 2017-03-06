@@ -47,8 +47,10 @@ class GeodataRepository
      */
     public function makeGeodata(Useragent $useragent, $ipAddress)
     {
+        $geodata = null;
         $geodataArray = $this->getGeodata($ipAddress);
-        if ($geodataArray) {
+        // This checks if all the values in geodataArray are false
+        if (array_values(array_unique($geodataArray)) !== [false]) {
             // Create the geodata on the useragent model
             $geodata = $useragent->geodata()->create($geodataArray);
         }

@@ -51,6 +51,7 @@ class ImportAccessLog extends Command
      */
     public function handle()
     {
+        // TODO: Move boundary setting into private method, return start and end
         $start = null;
         $end   = null;
         // Check for start and end params
@@ -70,7 +71,7 @@ class ImportAccessLog extends Command
         // Convert into an array we can iterate over
         $accessLog = explode(PHP_EOL, $accessLog);
         // The explode() will leave an empty item at the end of the array since it's on \r\n
-        array_pop($accessLog); 
+        array_pop($accessLog);
         // Display a progress bar when run from Artisan CLI
         $progressBar = $this->output->createProgressBar(count($accessLog));
         // Parse the file

@@ -50,9 +50,7 @@ class AccessLogParser
                 continue;
             }
 
-            $userAgentString = $entry->HeaderUserAgent;
-            // make App\Useragent
-            $useragent = $this->useragentRepository->makeUseragent($userAgentString, $timestamp);
+            $useragent = $this->useragentRepository->makeUseragent($entry->HeaderUserAgent, $timestamp);
             $geodata   = $this->geodataRepostitory->makeGeodata($useragent, $entry->host);
             // GeodataRepository::makeGeodata() will try to make a geodata entry with missing data, but if there's NO data...
             if (is_null($geodata)) {
