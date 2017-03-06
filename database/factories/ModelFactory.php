@@ -10,7 +10,6 @@
 | database. Just tell the factory how a default model should look.
 |
 */
-
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 $factory->define(App\User::class, function (Faker\Generator $faker) {
     static $password;
@@ -20,5 +19,14 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'email' => $faker->unique()->safeEmail,
         'password' => $password ?: $password = bcrypt('secret'),
         'remember_token' => str_random(10),
+    ];
+});
+
+$factory->define(App\Useragent::class, function (Faker\Generator $faker) {
+    return [
+        "id"      => 999999,
+        "browser" => "Chrome",
+        "device"  => "desktop",
+        "operating_system" => "Linux"
     ];
 });
