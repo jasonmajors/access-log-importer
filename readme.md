@@ -7,7 +7,7 @@ $ git clone https://github.com/jasonmajors/access-log-importer.git
 ```
 Or download the zip and extract into a project directory.
 
-Download the dependencies via [composer](https://getcomposer.org/)::
+Download the dependencies via [composer](https://getcomposer.org/):
 ```
 $ composer install
 ```
