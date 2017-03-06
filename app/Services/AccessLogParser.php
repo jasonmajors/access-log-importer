@@ -31,8 +31,10 @@ class AccessLogParser
 
     /**
      * Parses the access log
-     * @param  array  $accessLog   An array of each visit from the access log file
-     * @param  [type] $progressBar [description]
+     * @param  array       $accessLog   An array of each visit from the access log file
+     * @param  ProgressBar $progressBar Instance of Symfony's progress bar component
+     * @param  Carbon      $start
+     * @param  Carbon      $end  
      * @return void              
      */
     public function parse(array $accessLog, ProgressBar $progressBar, Carbon $start, Carbon $end)

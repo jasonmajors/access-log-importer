@@ -81,6 +81,11 @@ class UseragentTest extends TestCase
                 Carbon::now(),
                 ['browser' => 'Chrome Mobile', 'device' => 'tablet', 'operating_system' => 'Android']
             ],
+            [
+                "Mozilla/5.0 (compatible; MSIE 9.0; Windows Phone OS 7.5; Trident/5.0; IEMobile/9.0)",
+                Carbon::now(),
+                ['browser' => 'IE Mobile', 'device' => 'mobile', 'operating_system' => 'Windows Phone']
+            ],
         ];
     }
 }
