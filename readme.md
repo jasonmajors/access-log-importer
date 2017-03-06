@@ -35,13 +35,39 @@ ACCESS_LOG='myaccesslog.log'
 ```
 Generate an application key (alright, we don't really need to do this in the current iteration of the project, but it's a good practice)
 ```
-php artisan key:generate
+$ php artisan key:generate
+```
+Run the database migrations: 
+```
+$ php artisan migrate
+```
+## Usage
+To import the specified access log, run:
+```
+$ php artisan import:access-log
+```
+You can filter the import by visit start and end dates as well.
+##### Examples:
+No visits prior to 1/1/2016:
+```
+$ php artisan import:access-log --start='1/1/2016 12:00AM'
+```
+Only import visits between 10:00 AM on 12:00 PM on 1/1/2016
+```
+$ php artisan import:access-log --start='1/1/2016 10:00 AM' --end='1/1/2016 12:00 PM'
+```
+Only visits before 1/1/2015:
+```
+$ php artisan import:access-log --end='1/1/2015 12:00 AM'
 ```
 
-php artisan migrate
-## Usage
-TBD
 ## Testing
-TBD
-## Considerations
-TBD
+To run the tests, you'll need [PHPUnit](https://phpunit.de/getting-started.html) installed. Then from the project root, run:
+```
+$ phpunit
+```
+
+## Limitations
++ Fetching the geographical data for an IP address using free packages seems to be quite limited. In the event that a geographical attribute cannot be located, the name of the missing attribute will be logged to laravel.log
++ Determining a user's device based on the User-Agent string seems unreliable
++ Still need to write more unit tests
