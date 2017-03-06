@@ -54,12 +54,13 @@ class UseragentRepository
         if (strpos($uaDevice, 'phone') !== false) {
             $device = 'mobile';
         }
-
-        if (strpos($uaDevice, 'nexus') !== false) {
-            $device = 'tablet';
-        }
+        // Samsung something or other? Probably a phone
         if (strpos($uaDevice, 'samsung') !== false) {
             $device = 'mobile';
+        }
+        // Unless it's a nexus...
+        if (strpos($uaDevice, 'nexus') !== false) {
+            $device = 'tablet';
         }
 
         if (strpos($uaDevice, 'lg') !== false) {
@@ -78,9 +79,9 @@ class UseragentRepository
             $device = 'desktop';
         }
         // Lastly, check the original UA string for "Mobi" as recommended by MDN
-        if (strpos($useragentInfo->originalUserAgent, 'Mobi') !== false) {
+/*        if (strpos($useragentInfo->originalUserAgent, 'Mobi') !== false) {
             $device = 'mobile';
-        }
+        }*/
 
         return $device;
     }
